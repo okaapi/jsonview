@@ -1,0 +1,2 @@
+module JviewHelper
+end

@@ -1,0 +1,68 @@
+
+<h1> Jsonview Index </h1>
+
+<table>
+  <tr>
+    <td width="50%">
+      <%= form_tag do %>
+        <%= text_area_tag 'body', @body, rows: 10, cols: 25 %>
+        <br>
+        <%= submit_tag 'graph it!' %>
+      <% end %>
+    </td>
+    <td>
+      <div id="visualization" style="height:300px"></div>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+
+var options = {
+  nodes: {
+    /* radius: 20, */
+    fontSize: 30
+  }
+};
+
+var nodes = [
+  {
+    id: 'johnid',
+    label: 'john',
+    title: 'john label'
+  },
+  {
+    id: 'maryid',
+    label: 'mary',
+    title: 'mary <br>line2<br><b>line3</b>'
+  },
+  {
+    id: 'peteid',
+    label: 'pete',
+    title: 'pete<br>line2'
+  }
+];
+
+var edges = [
+  {
+    from: 'johnid',
+    to: 'maryid'
+  },
+  {
+    from: 'maryid',
+    to: 'peteid'
+  }
+];
+  
+var container = document.getElementById('visualization');
+var data = {
+  nodes: nodes,
+  edges: edges,
+  options: options
+};
+var network = new vis.Network(container, data, {});
+</script>
+
+<style>
+  .network-tooltip { position: absolute; padding: -10px }
+</style>

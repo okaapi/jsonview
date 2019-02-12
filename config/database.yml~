@@ -1,0 +1,18 @@
+login: &login
+  adapter: mysql2
+  host: localhost
+  username: okaapi
+  password: 0kap1
+  encoding: utf8
+  
+development:
+  database: zite
+  <<: *login
+
+production:
+  database: zite
+  <<: *login
+
+test:
+  database: zite_test
+  <<: *login
