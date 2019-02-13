@@ -24,7 +24,6 @@ Gemfile.lock
 # Ignore data files
 /public/storage
 /public/cache
-/public/assets
 
 # Ignore uploaded files in development
 /storage/*
