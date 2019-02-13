@@ -10,7 +10,7 @@
 	  </span>
       <%= form_tag  do %>	
 	  	<%= submit_tag 'graph it!' %><br><br>
-		<%= text_area_tag 'body', @body , rows: 30, cols: 80 %>
+		<%= text_area_tag 'body', @body , rows: 20, cols: 80 %>
       <% end %>	  
 	  <%= form_tag '/index', multipart: true do %>
         <br>
