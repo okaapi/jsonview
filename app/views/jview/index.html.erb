@@ -3,29 +3,30 @@
 
 <table border = 0 width = 100%>
   <tr>
-    <td valign=top width = 30%>
+    <td valign=top width = 50%>
 	  <h1> Visualize JSON </h1>
-	  <%= @error if @error %>	 
+	  <span style="color:red">
+	    <%= truncate( ('Error: ' + @error if @error ) ) %>
+	  </span>
       <%= form_tag  do %>	
 	  	<%= submit_tag 'graph it!' %><br><br>
-		<%= text_area_tag 'body', @body, rows: 20, cols: 50 %>
+		<%= text_area_tag 'body', @body , rows: 30, cols: 80 %>
       <% end %>	  
+	  <%= form_tag '/index', multipart: true do %>
+        <br>
+	    <%= file_field_tag :jsonfile %>
+        <%= submit_tag 'upload!' %>
+      <% end %>
     </td>
-    <td width= 70%>
-	  <i>use mouse to pan, scroll weel to zoom, click/hover for details, right click to save</i>
-      <div id="visualization" style="width:100%; height:1000px"></div>
+    <td width= 50%>
+      <div id="visualization" style="width:100%; height:700px"></div>
     </td>
   </tr>
 </table>
 
-
-
-
-
 <script type="text/javascript">
 
 var options = {
-    interaction:{hover:true},
     nodes: {
       font: {
         size: 50
@@ -36,34 +37,63 @@ var options = {
         minimum: 300
       }
     },
+    edges: {
+      font: {
+        size: 40,
+		align: 'middle'
+      },
+      arrows:'from'	  
+    },	
   layout: {
-    improvedLayout:true,
     hierarchical: {
-      enabled:false,
-      levelSeparation: 600,
-      nodeSpacing: 200,
-      treeSpacing: 200,
-      blockShifting: true,
-      edgeMinimization: true,
-      parentCentralization: true,
+      enabled:true,
+      levelSeparation: 800,
       direction: 'LR',        // UD, DU, LR, RL
-      sortMethod: 'hubsize'   // hubsize, directed
     }
-  }	
+  },
+  interaction: {
+           hover: false,
+		   navigationButtons: true,
+          keyboard: true
+		},
+        physics: {
+            enabled: true,
+            hierarchicalRepulsion: {
+              nodeDistance: 200
+            }
+        },
+		/*
+        configure: {
+          filter: function (option, path) {
+            if (path.indexOf('hierarchical') !== -1) {
+              return true;
+            }
+            if (path.indexOf('physics') !== -1) {
+              return true;
+            }
+            if (path.indexOf('smooth') !== -1 || option === 'smooth') {
+              return true;
+            }			  
+            return false;
+          },
+          showButton: false
+        }
+		*/
 };
 
 var nodes = [
-<% i = 0 %>
+<% levels = {} %>
 <% @nodes.each do |node| %>
   {
-    id: "<%= node['_id'] %>",
-    label: "<%= node['_type'] %>",
+    <% levels[node['_level']] = levels[node['_level']] ?  ( levels[node['_level']] + 1 ) : 0 %>
+    id: "<%= node['_id']  %>",
+    label: "<%= node['_label'] %>",
     title: "<%= node['_fields'].html_safe %>",
-    fixed: { y:true, x:true },
+	level: "<%= node['_level'] %>",
+    fixed: { y:false, x:false },
 	x: <%= node['_level'] * 600 %>	,
-	y: <%= -i * 120 %>
+	y: <%= levels[node['_level']] * 120 %>
   },
-  <% i = i + 1 %>
 <% end %>
 ];
 
@@ -71,7 +101,9 @@ var edges = [
 <% @links.each do |link| %>
   {
     from: "<%= link[:child] %>",
-    to: "<%= link[:parent] %>"
+    to: "<%= link[:parent] %>", 
+	label: "<%= link[:label] %>", 
+
   },
 <% end %>
 ];

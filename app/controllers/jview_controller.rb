@@ -6,16 +6,24 @@ class JviewController < ApplicationController
 
   def index
 
-	if @body = params[:body]
+	if params[:jsonfile]  
+	  @body = params[:jsonfile].read
+	elsif params[:body]
+	  @body = params[:body]
+    else
+	  @body = nil
+	end
+	
+	if @body
 	  begin
         @json = JSON.parse(@body)
 	  rescue Exception => e
 	    @json = {}
 	    @error = e.message
 	  end
-	  @nodes, @links = TreeGenerator.parse( @json )	 	 	  
+	  @nodes, @links = TreeGenerator.parse( @json, class_label = 'Type' )	  
 	else
-	  @body = params[:body]
+	  @body = 'enter JSON here'
 	  @nodes = @links = []
 	end
 	
