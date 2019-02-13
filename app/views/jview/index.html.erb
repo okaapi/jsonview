@@ -1,59 +1,79 @@
 
-<h1> Jsonview Index </h1>
 
-<table>
+
+<table border = 0 width = 100%>
   <tr>
-    <td width="50%">
-      <%= form_tag do %>
-        <%= text_area_tag 'body', @body, rows: 10, cols: 25 %>
-        <br>
-        <%= submit_tag 'graph it!' %>
-      <% end %>
+    <td valign=top width = 30%>
+	  <h1> Visualize JSON </h1>
+	  <%= @error if @error %>	 
+      <%= form_tag  do %>	
+	  	<%= submit_tag 'graph it!' %><br><br>
+		<%= text_area_tag 'body', @body, rows: 20, cols: 50 %>
+      <% end %>	  
     </td>
-    <td>
-      <div id="visualization" style="height:300px"></div>
+    <td width= 70%>
+	  <i>use mouse to pan, scroll weel to zoom, click/hover for details, right click to save</i>
+      <div id="visualization" style="width:100%; height:1000px"></div>
     </td>
   </tr>
 </table>
 
-<%= debug @json %>
+
+
+
 
 <script type="text/javascript">
 
 var options = {
-  nodes: {
-    /* radius: 20, */
-    fontSize: 30
-  }
+    interaction:{hover:true},
+    nodes: {
+      font: {
+        size: 50
+      },	
+      shape: 'box',
+      margin: 20,
+      widthConstraint: {
+        minimum: 300
+      }
+    },
+  layout: {
+    improvedLayout:true,
+    hierarchical: {
+      enabled:false,
+      levelSeparation: 600,
+      nodeSpacing: 200,
+      treeSpacing: 200,
+      blockShifting: true,
+      edgeMinimization: true,
+      parentCentralization: true,
+      direction: 'LR',        // UD, DU, LR, RL
+      sortMethod: 'hubsize'   // hubsize, directed
+    }
+  }	
 };
 
 var nodes = [
+<% i = 0 %>
+<% @nodes.each do |node| %>
   {
-    id: 'johnid',
-    label: 'john',
-    title: 'john label'
+    id: "<%= node['_id'] %>",
+    label: "<%= node['_type'] %>",
+    title: "<%= node['_fields'].html_safe %>",
+    fixed: { y:true, x:true },
+	x: <%= node['_level'] * 600 %>	,
+	y: <%= -i * 120 %>
   },
-  {
-    id: 'maryid',
-    label: 'mary',
-    title: 'mary <br>line2<br><b>line3</b>'
-  },
-  {
-    id: 'peteid',
-    label: 'pete',
-    title: 'pete<br>line2'
-  }
+  <% i = i + 1 %>
+<% end %>
 ];
 
 var edges = [
+<% @links.each do |link| %>
   {
-    from: 'johnid',
-    to: 'maryid'
+    from: "<%= link[:child] %>",
+    to: "<%= link[:parent] %>"
   },
-  {
-    from: 'maryid',
-    to: 'peteid'
-  }
+<% end %>
 ];
   
 var container = document.getElementById('visualization');
@@ -63,8 +83,8 @@ var data = {
   options: options
 };
 var network = new vis.Network(container, data, {});
+
+	  
 </script>
 
-<style>
-  .network-tooltip { position: absolute; padding: -10px }
-</style>
+
