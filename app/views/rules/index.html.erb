@@ -11,7 +11,7 @@
 	  	<%= submit_tag 'graph them!' %>
 		<br><br>
 		Syntax: <br>
-		<rulename> # (logical conditions # action1 ; action2 ; action 3		
+		rulename # (logical conditions) # action1 ; action2 ; action 3		
 		<br><br>		
 		<%= text_area_tag 'body', @body , rows: 20, cols: 30 %>
       <% end %>	  
@@ -90,7 +90,7 @@ var nodes = [
 <% @nodes.each do |node| %>
   {
     id: "<%= node['_id']  %>",
-    label: "<%= truncate(node['_label'])  %>",
+    label: "<%= truncate(node['_label']).html_safe  %>",
     title: "<%= ("<div style='color:red'>"+node['_title']+"</div>").html_safe %>",
     level: "<%= node['_level'] %>",
 	color: "<%= node['_color'] %>"
