@@ -22,6 +22,7 @@ Gemfile.lock
 .ruby-version
 
 # Ignore data files
+/public/assets
 /public/storage
 /public/cache
 
