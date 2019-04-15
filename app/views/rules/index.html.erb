@@ -179,7 +179,7 @@ var nodes = [
 <% @nodes.each do |node| %>
   {
     id: "<%= node['_id']  %>",
-    label: "<%= truncate(node['_label']).html_safe  %>",
+    label: "<%= truncate(node['_label'].html_safe)  %>",
     title: "<%= ("<div style='color:red'>"+node['_title']+"</div>").html_safe %>",
     level: "<%= node['_level'] %>",
 	color: "<%= node['_color'] %>"
