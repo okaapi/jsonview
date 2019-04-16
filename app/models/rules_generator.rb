@@ -226,7 +226,7 @@ class RulesGenerator
 	  node = {}
 	  @@id = @@id+1
 	  node['_id'] = logop_id = @@id 
-	  node['_label'] = arr[1].upcase
+	  node['_label'] = arr[0].upcase
 	  node['_level'] = level
 	  node['_title'] = parent_token_str  
 	  node['_color'] = '#AEC833'
@@ -237,7 +237,7 @@ class RulesGenerator
 	  links << link
 	  
 	
-	  nodes, links = self.parse_my_tokens( logop_id, nodes, links, level-1, arr[0], tokens )  
+	  nodes, links = self.parse_my_tokens( logop_id, nodes, links, level-1, arr[1], tokens )  
 	  
     elsif arr.count == 1 and /^(\s*)(#\d*?#)(\s*)$/ =~ parent_token_str
 	

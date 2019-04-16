@@ -141,6 +141,9 @@ var options = {
     hierarchical: {
       enabled:true,
       levelSeparation: 1000,
+	  blockShifting: true,
+	  treeSpacing: 20,
+	  sortMethod: 'hubsize',
       direction: 'LR',        // UD, DU, LR, RL
     }
   },
@@ -152,7 +155,8 @@ var options = {
         physics: {
             enabled: true,
             hierarchicalRepulsion: {
-              nodeDistance: 200
+              nodeDistance: 200,
+			  centralGravity: 0.0
             }
         },
 		/*
