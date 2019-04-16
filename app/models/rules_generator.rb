@@ -198,28 +198,36 @@ class RulesGenerator
     
 	# puts
 	# puts
-	# puts "#################################"
-	# p parent_token_str
+	puts "#################################"
+	p parent_token_str
+	p parent_id
+	parent_node = nodes.select{|n| n["_id"] == parent_id}
+	p parent_node.first["_label"]
 	
 	arr = parent_token_str.split(' ')
 	if( arr.count == 3 and ( arr[1].upcase == 'AND' or arr[1].upcase == 'OR' ) )
 	
-	  node = {}
-	  @@id = @@id+1
-	  node['_id'] = logop_id = @@id 
-	  node['_label'] = arr[1].upcase
-	  node['_level'] = level
-	  node['_title'] = parent_token_str  
-	  node['_color'] = '#AEC833'
- 
+	  if arr[1].upcase != parent_node.first["_label"]
+	    node = {}
+	    @@id = @@id+1
+	    node['_id'] = logop_id = @@id 
+	    node['_label'] = arr[1].upcase
+	    node['_level'] = level
+	    node['_title'] = parent_token_str  
+	    node['_color'] = '#AEC833'		
 	  
-	  nodes << node
-	  link = {child: parent_id, parent: @@id, label: 'condition' }
-	  links << link
+        nodes << node
+	    link = {child: parent_id, parent: logop_id, label: 'condition' }
+	    links << link
 
+        newlevel = level - 1
+      else
+	    logop_id = parent_id
+		newlevel = level
+      end	  
 	
-	  nodes, links = self.parse_my_tokens( logop_id, nodes, links, level-1, arr[0], tokens )
-	  nodes, links = self.parse_my_tokens( logop_id, nodes, links, level-1, arr[2], tokens )
+	  nodes, links = self.parse_my_tokens( logop_id, nodes, links, newlevel, arr[0], tokens )
+	  nodes, links = self.parse_my_tokens( logop_id, nodes, links, newlevel, arr[2], tokens )
 	  
 	elsif( arr.count == 2 and  arr[0].upcase == 'NOT' )
 	
